@@ -45,3 +45,6 @@ build/
 
 ### Scala ###
 .bsp/
+
+### DB File ###
+/src/main/resources/local.db

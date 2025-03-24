@@ -11,10 +11,10 @@ val slickVersion = "3.6.0"
 
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick"           % slickVersion,
-  "com.typesafe.slick" %% "slick-hikaricp"  % slickVersion,
-  "com.h2database"      % "h2"              % "1.4.197",
-  "org.slf4j"           % "slf4j-nop"       % "1.6.4",
-  "org.xerial"          % "sqlite-jdbc"     % "3.7.2"
+  "com.h2database"      % "h2"              % "2.3.232",
+  "org.slf4j"           % "slf4j-nop"       % "2.0.17",
+  "org.xerial"          % "sqlite-jdbc"     % "3.46.1.2",
+  "com.typesafe.slick" %% "slick-hikaricp"  % slickVersion
 )
 
 scalacOptions += "-deprecation"
