@@ -10,12 +10,13 @@ Ein TUI Programm
 
 ## Ziele / Tasks
 
-- [ ] Be able to Run the Programm with no issues
-- [ ] Create a TUI for the main Menu
+- [ ] Be able to Run the Program with no issues
+- [ ] 2 - Create a TUI for the main Menu
 - [X] 1 - Create a connection to a local sqlite db file
-- [ ] 1 - Create a Table for tasks and subtasks
-- [ ] 1 - Create a Table for categories
-- [ ] to be able to list all your tasks and count subtasks count
+- [X] 1 - Create a Table for tasks and subtasks
+- [X] 1 - Create a Table for categories
+- [ ] 2 - Create Mock data for Testing
+- [ ] 2 - to be able to list all your tasks and count subtasks count
 - [ ] allow sorting the Tasks by name (Title)
 - [ ] allow sorting the Tasks by date
 - [ ] allow filtering the tasks by completion
@@ -24,7 +25,7 @@ Ein TUI Programm
 - [ ] read a single Task and show subtasks
 - [ ] update a Task and its subtasks
 - [ ] delete a task
-- [ ] delete a subtack/s
+- [ ] delete a subtask/s
 - [ ] write docs for running the Program
 - [ ] write docs for building the Project
 - [ ] write docs for using the program
@@ -35,7 +36,7 @@ Ein TUI Programm
 - [ ] allow the searching the titles of subtasks
 - [ ] remove a dependant task link
 - [ ] make the TUI UI look clean and nice
-- [ ] 
+- [ ] enable to add multiple categories for a task
 
 ## Kriterien
 

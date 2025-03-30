@@ -1,0 +1,5 @@
+Task Manager TUI
+
+list - display all current tasks
+add [name] - add a new Task
+exit, q - to quit the Program
