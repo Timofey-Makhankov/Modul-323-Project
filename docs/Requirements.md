@@ -12,7 +12,7 @@ Ein TUI Programm
 
 - [ ] Be able to Run the Programm with no issues
 - [ ] Create a TUI for the main Menu
-- [ ] 1 - Create a connection to a local sqlite db file
+- [X] 1 - Create a connection to a local sqlite db file
 - [ ] 1 - Create a Table for tasks and subtasks
 - [ ] 1 - Create a Table for categories
 - [ ] to be able to list all your tasks and count subtasks count
