@@ -15,19 +15,19 @@ Ein TUI Programm
 - [X] 1 - Create a connection to a local sqlite db file
 - [X] 1 - Create a Table for tasks and subtasks
 - [X] 1 - Create a Table for categories
-- [ ] 2 - Create Mock data for Testing
+- [X] 1 - Create Mock data for Testing
 - [ ] 2 - to be able to list all your tasks and count subtasks count
 - [ ] allow sorting the Tasks by name (Title)
 - [ ] allow sorting the Tasks by date
 - [ ] allow filtering the tasks by completion
 - [ ] allow searching the tasks by title
-- [ ] Save a Task including any subtasks (title, {description}, completion = false, {categroy}, {deadline})
-- [ ] read a single Task and show subtasks
+- [ ] 2 - Save a Task including any subtasks (title, {description}, completion = false, {categroy}, {deadline})
+- [ ] 2 - read a single Task and show subtasks
 - [ ] update a Task and its subtasks
 - [ ] delete a task
 - [ ] delete a subtask/s
-- [ ] write docs for running the Program
-- [ ] write docs for building the Project
+- [ ] 1 - write docs for running the Program
+- [ ] 1 - write docs for building the Project
 - [ ] write docs for using the program
 
 ### Extra (Wenn möglich)
