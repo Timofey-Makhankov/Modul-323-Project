@@ -1,6 +1,6 @@
 package ch.main
 
-import ch.main.db.{connection, createTables}
+import ch.main.db.{connection, createTables, generateMockData}
 import ch.main.textInterface.Command
 
 import scala.concurrent.Await
@@ -15,6 +15,9 @@ def main(): Unit = {
   try {
     // Creating the tables, If they don't exist
     Await.result(db.run(createTables), Duration.Inf)
+    if (doGenerateMockData()) {
+      Await.result(db.run(generateMockData), Duration.Inf)
+    }
     while (running) {
       val input = readLine("> ").toLowerCase()
       input match
