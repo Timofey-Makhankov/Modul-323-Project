@@ -28,10 +28,11 @@ def main(): Unit = {
           val helpMessageLines = try helpMessageSource.mkString finally helpMessageSource.close()
           println(helpMessageLines)
         }
-        case  "q" | "exit" => running = false
-        case  "list" => println("listing tasks, TODO")
-        case  s"add $title" => Command.addTask(title)
-        case _ => println("Invalid Input, Please try again")
+        case "q" | "exit" => running = false
+        case "list" => println("listing tasks, TODO")
+        case s"add $title" => Command.addTask(title)
+        case s"delete $id" => Command.deleteTask(id)
+        case _ => Command.sendErrorMessage("Invalid Input, Please try again")
     }
   } finally db.close
 }

@@ -12,4 +12,10 @@ object TaskAction {
     //TODO implement insert for Tasks
     DBIO.seq()
   }
+
+  def delete(id: Int): DBIOAction[Unit, NoStream, Effect.Write] = {
+    DBIO.seq(
+      tasksSchema.filter(_.id === id).delete
+    )
+  }
 }
