@@ -5,6 +5,8 @@ import slick.jdbc.SQLiteProfile.api.*
 
 import java.time.LocalDateTime
 
+
+// (4) Data set to be immutable
 class TaskTable(tag: Tag) extends Table[Task](tag, Option.empty, "tasks"){
   def id = column[Int]("id", O.PrimaryKey)
   def title = column[String]("title")

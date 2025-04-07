@@ -20,8 +20,10 @@ def main(): Unit = {
     }
     while (running) {
       val input = readLine("> ").toLowerCase()
+      // (4) Pattern Matching in use
       input match
         case "h" | "help" => {
+          // Put it into a impure function
           val helpMessageSource = fromFile("src/main/resources/help_message.txt")
           val helpMessageLines = try helpMessageSource.mkString finally helpMessageSource.close()
           println(helpMessageLines)

@@ -7,9 +7,12 @@ import slick.jdbc.SQLiteProfile.api.*
 import java.time.LocalDateTime
 
 val connection = Database.forConfig("sqlite")
+
 val createTables = DBIO.seq((
   categoriesSchema.schema ++ tasksSchema.schema
   ).createIfNotExists)
+
+// (1) Pure Function in use
 val generateMockData = DBIO.seq(
   categoriesSchema ++= Seq(
     Category(name = "Home"),
