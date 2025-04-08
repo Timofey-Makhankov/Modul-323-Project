@@ -1,5 +1,61 @@
-Task Manager TUI
+Task Manager TUI Help
 
-list - display all current tasks
-add [name] - add a new Task
-exit, q - to quit the Program
+1. list
+2. add [name]
+3. read [name]
+4. update [name]
+5. delete [name]
+6. exit / q
+
+1. list - Display all current tasks
+   - Description: This command lists all the tasks currently stored in the task manager.
+   - Example usage:
+     > list
+   - Possible issues:
+     - If there are no tasks yet, it will display nothing. You can add tasks using the `add [name]` command.
+     - If the task list fails to display, check if the database is properly connected and ensure there are no issues with the data.
+
+2. add [name] - Add a new task
+   - Description: This command adds a new task to the task manager with the specified name.
+   - Example usage:
+     > add Finish homework
+   - This will create a task with the title "Finish homework".
+   - Possible issues:
+     - Make sure the task name is provided. If you leave the name empty, you will see an error.
+     - If the task name contains special characters or spaces, make sure it is enclosed in quotation marks: `add "Finish the project"`.
+
+3. read [name] - Read a single task and show subtasks
+   - Description: This command allows you to view a specific task and its subtasks.
+   - Example usage:
+     > read "Finish homework"
+   - This will display the task with ID 1 and list any associated subtasks beneath it.
+   - Possible issues:
+     - Ensure the task name exists. If you provide an invalid or non-existing task name, it will show an error.
+     - If the task has no subtasks, the output will state that there are no subtasks.
+     - If the task name is correct but the subtasks are missing or not showing, check the database for any data inconsistencies or missing subtask entries.
+
+4. update [name] - Update an existing task
+   - Description: Use this command to update an existing task.
+   - Example usage:
+     > update 1 "Complete homework"
+   - This will change the task with name 1 to have the title "Complete homework".
+   - Possible issues:
+     - Make sure the task name exists. If you provide an invalid or non-existing task name, it will show an error.
+     - Ensure the new task name is not empty.
+
+5. delete [name] - Delete a task by name
+   - Description: This command deletes the task with the specified name from the task list.
+   - Example usage:
+     > delete 1
+   - This will delete the task with name 1 from the task list.
+   - Possible issues:
+     - Make sure the task name exists. If you provide an invalid name, you will receive an error message.
+     - Deleting tasks is permanent. Be sure you want to remove a task before using this command.
+
+6. exit, q - Quit the Program
+   - Description: Use this command to exit the Task Manager.
+   - Example usage:
+     > exit
+   - This will terminate the program.
+   - Possible issues:
+     - If the program does not exit properly, try closing the terminal or restarting the program.
