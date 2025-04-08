@@ -1,5 +1,6 @@
 package ch.main
 
+import ch.main.db.model.task.TaskAction
 import ch.main.db.{connection, createTables, generateMockData}
 import ch.main.textInterface.Command
 
@@ -28,9 +29,14 @@ def main(): Unit = {
           val helpMessageLines = try helpMessageSource.mkString finally helpMessageSource.close()
           println(helpMessageLines)
         }
+
+        case "list" => Command.listTasks()
+        case  s"add $title, $description, $categoryId, $parentTaskId, $deadline" => Command.addTask(title, Option(description), Option(categoryId), Option(parentTaskId), Option(deadline))
+        case s"read $title" => println("searching for $title, TODO")
+        case s"update $title" => Command.updateTask(title)
+        case  s"delete $title" => println("deleting tasks, TODO")
         case  "q" | "exit" => running = false
-        case  "list" => println("listing tasks, TODO")
-        case  s"add $title" => Command.addTask(title)
+        
         case _ => println("Invalid Input, Please try again")
     }
   } finally db.close

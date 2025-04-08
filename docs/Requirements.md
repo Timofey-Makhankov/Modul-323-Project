@@ -11,24 +11,25 @@ Ein TUI Programm
 ## Ziele / Tasks
 
 - [ ] 1 & 2 - Be able to Run the Program with no issues
-- [ ] 2 - Create a TUI for the main Menu
+- [X] 2 - Create a TUI for the main Menu
 - [X] 1 - Create a connection to a local sqlite db file
 - [X] 1 - Create a Table for tasks and subtasks
 - [X] 1 - Create a Table for categories
 - [X] 1 - Create Mock data for Testing
-- [ ] 2 - to be able to list all your tasks and count subtasks count
-- [ ] 1 - allow sorting the Tasks by name (Title)
-- [ ] 1 - allow sorting the Tasks by date
-- [ ] 2 - allow filtering the tasks by completion
-- [ ] 2 - allow searching the tasks by title
+- [ ] 2 - Be able to list all your tasks
+- [ ] 2 - Be able to count subtasks of a main task 
+- [ ] 1 - Allow sorting the Tasks by name (Title)
+- [ ] 1 - Allow sorting the Tasks by date
+- [ ] 2 - Allow filtering the tasks by completion
+- [ ] 2 - Allow searching the tasks by title
 - [ ] 2 - Save a Task including any subtasks (title, {description}, completion = false, {categroy}, {deadline})
-- [ ] 2 - read a single Task and show subtasks
-- [ ] 2 - update a Task and its subtasks
-- [ ] 1 - delete a task
-- [ ] 1 - delete a subtask/s
-- [ ] 1 - write docs for running the Program
-- [ ] 1 - write docs for building the Project
-- [ ] 1 - write docs for using the program
+- [ ] 2 - Read a single Task and show subtasks
+- [ ] 2 - Update a Task and its subtasks
+- [ ] 1 - Delete a task
+- [ ] 1 - Delete a subtask/s
+- [ ] 1 - Write docs for running the Program
+- [ ] 1 - Write docs for building the Project
+- [ ] 1 - Write docs for using the program
 
 ### Extra (Wenn möglich)
 
