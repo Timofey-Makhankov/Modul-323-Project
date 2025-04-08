@@ -17,6 +17,6 @@ class TaskTable(tag: Tag) extends Table[Task](tag, Option.empty, "tasks"){
   def lastUpdated = column[LocalDateTime]("last_updated")
   def deadline = column[Option[LocalDateTime]]("deadline")
   override def * = (id.?, title, description, categoryId, parentTaskId, completed, lastUpdated, deadline).mapTo[Task]
-  def category = foreignKey("category_fk", categoryId, categoriesSchema)(_.id.?)
-  def subtask = foreignKey("parent_task_fk", parentTaskId, tasksSchema)(_.id.?)
+  def category = foreignKey("category_fk", categoryId, categoriesSchema)(_.id.?, onDelete = ForeignKeyAction.NoAction, onUpdate = ForeignKeyAction.NoAction)
+  def subtask = foreignKey("parent_task_fk", parentTaskId, tasksSchema)(_.id.?, onDelete = ForeignKeyAction.Cascade, onUpdate = ForeignKeyAction.NoAction)
 }
