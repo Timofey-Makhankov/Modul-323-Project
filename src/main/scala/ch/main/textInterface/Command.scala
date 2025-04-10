@@ -3,6 +3,9 @@ package ch.main.textInterface
 import ch.main.db.model.task.{Task, TaskAction, TaskService}
 import slick.jdbc.SQLiteProfile.api.*
 import java.time.LocalDateTime
+import scala.concurrent.Await
+import scala.concurrent.duration._
+
 
 import java.time.LocalDateTime
 
@@ -30,13 +33,7 @@ object Command {
     )
     val insertAction = TaskAction.insert(newTask)
     val resultFuture = db.run(insertAction)
-    printf("You can give the following optional information: \n" +
-      "- Description \n" +
-      "- Category ID \n" +
-      "- Parent task ID \n" +
-      "- Deadline")
-    printf("adding %s\n", title)
-    // TODO take only title as parameter, then print ^ "give optional information" and save it all
+      printf("adding %s\n", title)
   }
 
   def updateTask(title: String): Unit = {
@@ -52,5 +49,22 @@ object Command {
     val updateAction = TaskAction.update(updatedTask)
     val resultFuture = db.run(updateAction)
     printf("updating %s\n", title)
+  }
+
+  def searchTasksByTitle(title: String): Unit = {
+    val db = Database.forConfig("sqlite")
+    val searchTask = Task(
+      id = None,
+      title = title,
+      categoryId = None,
+      description = None,
+      deadline = None,
+      parentTaskId = None
+    )
+    val searchResult = TaskService.searchTasksByTitle(title)
+    println(s"Title: ${searchTask.title}, Description: ${searchTask.description}, " +
+      s"Category: ${searchTask.categoryId.getOrElse("No Category")}, " +
+      s"Completed: ${searchTask.completed}, Last Updated: ${searchTask.lastUpdated}, " +
+      s"Deadline: ${searchTask.deadline.getOrElse("No deadline defined")}")
   }
 }

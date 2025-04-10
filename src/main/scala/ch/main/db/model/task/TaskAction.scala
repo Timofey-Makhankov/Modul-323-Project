@@ -19,4 +19,10 @@ object TaskAction {
       .update((task.title, task.categoryId, task.description, task.deadline, task.parentTaskId))
     DBIO.seq()
   }
+
+  def searchByTitle(searchTerm: String): DBIOAction[Seq[Task], NoStream, Effect.Read] = {
+    tasksSchema.filter(_.title.toLowerCase like s"%${searchTerm.toLowerCase}%").result
+  }
+
+  
 }

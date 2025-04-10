@@ -1,11 +1,12 @@
 Task Manager TUI Help
 
 1. list
-2. add [name]
-3. read [name]
-4. update [name]
-5. delete [name]
-6. exit / q
+2. add [title]
+3. read [title]
+4. update [title]
+5. delete [title]
+6. search [title]
+7. exit / q
 
 1. list - Display all current tasks
    - Description: This command lists all the tasks currently stored in the task manager.
@@ -15,16 +16,21 @@ Task Manager TUI Help
      - If there are no tasks yet, it will display nothing. You can add tasks using the `add [name]` command.
      - If the task list fails to display, check if the database is properly connected and ensure there are no issues with the data.
 
-2. add [name] - Add a new task
+2. add [title] - Add a new task
    - Description: This command adds a new task to the task manager with the specified name.
    - Example usage:
      > add Finish homework
+   - Additionally you can give the following optional information:
+        - Description
+        -  Category ID
+        - Parent task ID
+        - Deadline
    - This will create a task with the title "Finish homework".
    - Possible issues:
      - Make sure the task name is provided. If you leave the name empty, you will see an error.
      - If the task name contains special characters or spaces, make sure it is enclosed in quotation marks: `add "Finish the project"`.
 
-3. read [name] - Read a single task and show subtasks
+3. read [title] - Read a single task and show subtasks
    - Description: This command allows you to view a specific task and its subtasks.
    - Example usage:
      > read "Finish homework"
@@ -34,7 +40,7 @@ Task Manager TUI Help
      - If the task has no subtasks, the output will state that there are no subtasks.
      - If the task name is correct but the subtasks are missing or not showing, check the database for any data inconsistencies or missing subtask entries.
 
-4. update [name] - Update an existing task
+4. update [title] - Update an existing task
    - Description: Use this command to update an existing task.
    - Example usage:
      > update 1 "Complete homework"
@@ -43,7 +49,7 @@ Task Manager TUI Help
      - Make sure the task name exists. If you provide an invalid or non-existing task name, it will show an error.
      - Ensure the new task name is not empty.
 
-5. delete [name] - Delete a task by name
+5. delete [title] - Delete a task by name
    - Description: This command deletes the task with the specified name from the task list.
    - Example usage:
      > delete 1
@@ -52,7 +58,17 @@ Task Manager TUI Help
      - Make sure the task name exists. If you provide an invalid name, you will receive an error message.
      - Deleting tasks is permanent. Be sure you want to remove a task before using this command.
 
-6. exit, q - Quit the Program
+6. search [title] - Search for tasks by title
+   - Description: This command allows you to search for tasks that contain the specified title (case insensitive).
+   - Example usage:
+     > search Homework
+   - This will search for tasks that have "Homework" in the title and display the matching tasks.
+   - Possible issues:
+     - Make sure the title is spelled correctly. If no tasks are found, the output will indicate that no matching tasks were found.
+     - If you want to search for tasks with a more specific title, provide more specific keywords.
+     - The search is case insensitive, so "homework" and "Homework" will yield the same results.
+
+7. exit, q - Quit the Program
    - Description: Use this command to exit the Task Manager.
    - Example usage:
      > exit
