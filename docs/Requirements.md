@@ -22,7 +22,7 @@ Ein TUI Programm
 - [ ] 1 - Allow sorting the Tasks by date
 - [ ] 2 - Allow filtering the tasks by completion
 - [X] 2 - Allow searching the tasks by title
-- [ ] 2 - Save a Task including any subtasks (title, {description}, completion = false, {categroy}, {deadline})
+- [ ] 2 - Save a Task (including any subtasks (title, {description}, completion = false, {categroy}, {deadline}))
 - [ ] 2 - Read a single Task and show subtasks
 - [ ] 2 - Update a Task and its subtasks
 - [ ] 1 - Delete a task

@@ -50,6 +50,19 @@ object Command {
     val resultFuture = db.run(updateAction)
     printf("updating %s\n", title)
   }
+  def deleteTask(id: String): Unit = {
+    val index = id.toIntOption
+    index match
+      case None => sendErrorMessage("The provided Index is not a valid Index number")
+      case Some(value) => {
+        TaskService.deleteTask(value)
+        println("Successfully deleted a task")
+      }
+  }
+
+  def sendErrorMessage(message: String): Unit = {
+    println(message)
+  }
 
   def searchTasksByTitle(title: String): Unit = {
     val db = Database.forConfig("sqlite")

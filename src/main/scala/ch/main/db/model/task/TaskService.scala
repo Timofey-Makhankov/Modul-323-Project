@@ -6,7 +6,6 @@ import slick.lifted.TableQuery.Extract
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
-
 object TaskService {
   val db = connection
   def getAllTasks: Seq[Task] = {
@@ -28,6 +27,15 @@ object TaskService {
       })
     } else {
       println(s"No tasks found matching '$searchTerm'.")
+    }
+  }
+
+  def deleteTask(id: Int): Unit = {
+    val db = connection
+    try {
+      Await.result(db.run(TaskAction.delete(id)), Duration.Inf)
+    } finally {
+      db.close
     }
   }
 }

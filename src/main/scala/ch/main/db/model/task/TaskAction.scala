@@ -1,7 +1,8 @@
 package ch.main.db.model.task
 
+import slick.dbio.Effect
 import slick.jdbc.SQLiteProfile.api.*
-import scala.concurrent.ExecutionContext.Implicits.global
+import slick.sql.FixedSqlAction
 
 object TaskAction {
   def getAll = {
@@ -13,11 +14,14 @@ object TaskAction {
   }
 
   // (6) Umsetzung von Pipelines -> .filter().map().update()
-  def update(task: Task): DBIOAction[Unit, NoStream, Effect.Write] = {
+  def update(task: Task): FixedSqlAction[Int, NoStream, Effect.Write] = {
     tasksSchema.filter(_.id === task.id.get)
       .map(t => (t.title, t.categoryId, t.description, t.deadline, t.parentTaskId))
       .update((task.title, task.categoryId, task.description, task.deadline, task.parentTaskId))
-    DBIO.seq()
+  }
+
+  def delete(id: Int): FixedSqlAction[Int, NoStream, Effect.Write] = {
+    tasksSchema.filter(_.id === id).delete
   }
 
   def searchByTitle(searchTerm: String): DBIOAction[Seq[Task], NoStream, Effect.Read] = {
