@@ -25,15 +25,15 @@ def main(): Unit = {
       // (4) Pattern Matching in use
       input match
         case "h" | "help" => {
-          // Put it into a impure function
+          // Put it into an impure function
           val helpMessageSource = fromFile("src/main/resources/help_message.txt")
           val helpMessageLines = try helpMessageSource.mkString finally helpMessageSource.close()
           println(helpMessageLines)
         }
         case "list" => Command.listTasks()
-        case s"add $title, $description, $categoryId, $parentTaskId, $deadline" => Command.addTask(title, Option(description), Option(categoryId), Option(parentTaskId), Option(deadline))
-        case s"read $title" => println("searching for $title, TODO")
-        case s"update $title" => Command.updateTask(title)
+        case s"add $id, $title, $description, $categoryId, $parentTaskId, $deadline" => Command.addTask(id, title, Option(description), Option(categoryId), Option(parentTaskId), Option(deadline))
+        case s"read $id" => Command.readTask(id)
+        case s"update $id, $title, $description, $categoryId, $parentTaskId, $deadline" => Command.updateTask(id, title, Option(description), Option(categoryId), Option(parentTaskId), Option(deadline))
         case s"delete $id" => Command.deleteTask(id)
         case s"search $title" => Command.searchTasksByTitle(title)
         case "q" | "exit" | "quit" => running = false

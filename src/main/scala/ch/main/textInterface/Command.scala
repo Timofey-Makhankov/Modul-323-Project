@@ -3,7 +3,7 @@ package ch.main.textInterface
 import ch.main.db.model.task.{Task, TaskAction, TaskService}
 import slick.jdbc.SQLiteProfile.api.*
 import java.time.LocalDateTime
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
 
@@ -13,15 +13,15 @@ object Command {
   def listTasks(): Unit = {
     val allTasks = TaskService.getAllTasks
     allTasks.foreach(task => {
-      println(s"Title: ${task.title}, Description: ${task.description}, " +
+      println(s"ID: ${task.id}, " +
+        s"Title: ${task.title}, Description: ${task.description}, " +
         s"Category: ${task.categoryId.getOrElse("No Category")}, " +
         s"Completed: ${task.completed}, Last Updated: ${task.lastUpdated}, " +
         s"Deadline: ${task.deadline.getOrElse("No deadline defined")}")
     })
   }
 
-  def addTask(title: String, description: Option[String], categoryId: Option[String],
-              parentTaskId: Option[String], deadline: Option[String]): Unit = {
+  def addTask(id: String, title: String, description: Option[String], categoryId: Option[String],parentTaskId: Option[String], deadline: Option[String]): Unit = {
     val db = Database.forConfig("sqlite")
     val newTask = Task(
       id = None,
@@ -36,8 +36,7 @@ object Command {
       printf("adding %s\n", title)
   }
 
-  def updateTask(title: String): Unit = {
-    val db = Database.forConfig("sqlite")
+  def updateTask(id: String, title: String, description: Option[String], categoryId: Option[String],parentTaskId: Option[String], deadline: Option[String]): Unit = {
     val updatedTask = Task(
       id = None,
       title = title,
@@ -47,9 +46,9 @@ object Command {
       parentTaskId = None
     )
     val updateAction = TaskAction.update(updatedTask)
-    val resultFuture = db.run(updateAction)
     printf("updating %s\n", title)
-  }
+  } //update $id
+
   def deleteTask(id: String): Unit = {
     val index = id.toIntOption
     index match
@@ -75,9 +74,18 @@ object Command {
       parentTaskId = None
     )
     val searchResult = TaskService.searchTasksByTitle(title)
-    println(s"Title: ${searchTask.title}, Description: ${searchTask.description}, " +
+    println(s"Id: ${searchTask.id}, Title: ${searchTask.title}, Description: ${searchTask.description}, " +
       s"Category: ${searchTask.categoryId.getOrElse("No Category")}, " +
       s"Completed: ${searchTask.completed}, Last Updated: ${searchTask.lastUpdated}, " +
       s"Deadline: ${searchTask.deadline.getOrElse("No deadline defined")}")
+  }
+
+  def readTask(id: String): Unit = {
+    val db = Database.forConfig("sqlite")
+    val readTask = TaskService.readTask(id)
+    println(s"Title: ${readTask.title}, Description: ${readTask.description}, " +
+      s"Category: ${readTask.categoryId.getOrElse("No Category")}, " +
+      s"Completed: ${readTask.completed}, Last Updated: ${readTask.lastUpdated}, " +
+      s"Deadline: ${readTask.deadline.getOrElse("No deadline defined")}")
   }
 }

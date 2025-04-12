@@ -28,5 +28,18 @@ object TaskAction {
     tasksSchema.filter(_.title.toLowerCase like s"%${searchTerm.toLowerCase}%").result
   }
 
-  
+  def readTask(searchId: String): DBIOAction[Seq[Task], NoStream, Effect.Read] = {
+    val id = try {
+      Some(searchId.toInt)
+    } catch {
+      case _: NumberFormatException => None
+    }
+
+    id match {
+      case Some(validId) =>
+        tasksSchema.filter(_.id === validId).result
+      case None =>
+        DBIO.failed(new IllegalArgumentException("Invalid ID format"))
+    }
+  }
 }
