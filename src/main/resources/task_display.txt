@@ -1,0 +1,4 @@
+ID: %s Title: %s
+%s
+Complete: %s Deadline: %s
+Category: %s

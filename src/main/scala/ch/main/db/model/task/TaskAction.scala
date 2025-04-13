@@ -1,45 +1,34 @@
 package ch.main.db.model.task
 
 import slick.dbio.Effect
+import slick.jdbc.SQLiteProfile
 import slick.jdbc.SQLiteProfile.api.*
-import slick.sql.FixedSqlAction
+import slick.lifted.TableQuery.Extract
+import slick.sql.{FixedSqlAction, FixedSqlStreamingAction, SqlAction}
 
 object TaskAction {
   def getAll = {
     tasksSchema.result
   }
 
-  def insert(task: Task): DBIOAction[Unit, NoStream, Effect.Write] = {
-    DBIO.seq(tasksSchema += task)
+  def getById(id: Int): SqlAction[Extract[TaskTable], NoStream, Effect.Read] = {
+    tasksSchema.filter(_.id === id).result.head
+  }
+
+  def getAllSubTasksById: FixedSqlStreamingAction[Seq[Extract[TaskTable]], Extract[TaskTable], Effect.Read] = {
+    tasksSchema.filter(_.parentTaskId.nonEmpty).result
+  }
+
+  def insert(task: Task): FixedSqlAction[Int, NoStream, Effect.Write] = {
+    tasksSchema += task
   }
 
   // (6) Umsetzung von Pipelines -> .filter().map().update()
   def update(task: Task): FixedSqlAction[Int, NoStream, Effect.Write] = {
-    tasksSchema.filter(_.id === task.id.get)
-      .map(t => (t.title, t.categoryId, t.description, t.deadline, t.parentTaskId))
-      .update((task.title, task.categoryId, task.description, task.deadline, task.parentTaskId))
+    tasksSchema.filter(_.id === task.id.get).update(task)
   }
 
   def delete(id: Int): FixedSqlAction[Int, NoStream, Effect.Write] = {
     tasksSchema.filter(_.id === id).delete
-  }
-
-  def searchByTitle(searchTerm: String): DBIOAction[Seq[Task], NoStream, Effect.Read] = {
-    tasksSchema.filter(_.title.toLowerCase like s"%${searchTerm.toLowerCase}%").result
-  }
-
-  def readTask(searchId: String): DBIOAction[Seq[Task], NoStream, Effect.Read] = {
-    val id = try {
-      Some(searchId.toInt)
-    } catch {
-      case _: NumberFormatException => None
-    }
-
-    id match {
-      case Some(validId) =>
-        tasksSchema.filter(_.id === validId).result
-      case None =>
-        DBIO.failed(new IllegalArgumentException("Invalid ID format"))
-    }
   }
 }

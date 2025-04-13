@@ -1,91 +1,164 @@
 package ch.main.textInterface
 
-import ch.main.db.model.task.{Task, TaskAction, TaskService}
+import ch.main.db.model.category.CategoryService
+import ch.main.db.model.task.{Task, TaskService}
 import slick.jdbc.SQLiteProfile.api.*
-import java.time.LocalDateTime
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
 
-
+import java.sql.Timestamp
 import java.time.LocalDateTime
 
-object Command {
-  def listTasks(): Unit = {
-    val allTasks = TaskService.getAllTasks
-    allTasks.foreach(task => {
-      println(s"ID: ${task.id}, " +
-        s"Title: ${task.title}, Description: ${task.description}, " +
-        s"Category: ${task.categoryId.getOrElse("No Category")}, " +
-        s"Completed: ${task.completed}, Last Updated: ${task.lastUpdated}, " +
-        s"Deadline: ${task.deadline.getOrElse("No deadline defined")}")
-    })
+object Command
+{
+  // Complete
+  def printHelpMessage(): Unit = {
+    val message = readFile("src/main/resources/help_message.txt")
+    message match
+      case Some(value) => println(value)
+      case None => sendErrorMessage("unable to display message, please read written doc")
   }
 
-  def addTask(id: String, title: String, description: Option[String], categoryId: Option[String],parentTaskId: Option[String], deadline: Option[String]): Unit = {
-    val db = Database.forConfig("sqlite")
-    val newTask = Task(
-      id = None,
-      title = title,
-      categoryId = None,
-      description = None,
-      deadline = None,
-      parentTaskId = None
-    )
-    val insertAction = TaskAction.insert(newTask)
-    val resultFuture = db.run(insertAction)
-      printf("adding %s\n", title)
-  }
-
-  def updateTask(id: String, title: String, description: Option[String], categoryId: Option[String],parentTaskId: Option[String], deadline: Option[String]): Unit = {
-    val updatedTask = Task(
-      id = None,
-      title = title,
-      categoryId = None,
-      description = None,
-      deadline = None,
-      parentTaskId = None
-    )
-    val updateAction = TaskAction.update(updatedTask)
-    printf("updating %s\n", title)
-  } //update $id
-
-  def deleteTask(id: String): Unit = {
-    val index = id.toIntOption
-    index match
-      case None => sendErrorMessage("The provided Index is not a valid Index number")
-      case Some(value) => {
-        TaskService.deleteTask(value)
-        println("Successfully deleted a task")
-      }
-  }
-
+  // Complete
   def sendErrorMessage(message: String): Unit = {
     println(message)
   }
 
-  def searchTasksByTitle(title: String): Unit = {
-    val db = Database.forConfig("sqlite")
-    val searchTask = Task(
-      id = None,
+  //complete
+  def listTasks(db: Database): Unit = {
+    val content = readFile("src/main/resources/task_display.txt")
+    content match
+      case None => sendErrorMessage("unable to get task template, please report the issue to us")
+      case Some(template) => {
+        val tasks = TaskService.getAllTasks(db)
+        tasks.foreach(task => {
+          val values: Seq[String] = generateTemplateData(db, task)
+          printf(
+            template + "%nSubtasks: %s" + "%n",
+            values.appended(TaskService.getAllSubtasksByParentId(db).count(_.parentTaskId.get == task.id.get).toString): _*)
+          print("\n")
+        })
+      }
+  }
+  // done
+  def listCategories(db: Database): Unit = {
+    val categories = CategoryService.getAllCategories(db)
+    for (c <- categories) yield printf("%d: %s%n", c.id.get, c.name)
+  }
+  // done
+  def showTaskDetails(db: Database, id: String): Unit = {
+    id.toIntOption match
+      case None => sendErrorMessage("Invalid Id, please try again")
+      case Some(id) => {
+        val content = readFile("src/main/resources/task_display.txt")
+        content match
+          case None => sendErrorMessage("unable to get task template, please report the issue to us")
+          case Some(template) =>{
+            val task = TaskService.getTaskById(db, id)
+            val subtasks = TaskService.getAllSubtasksByParentId(db).filter(_.parentTaskId.get == task.id.get)
+            val values: Seq[String] = generateTemplateData(db, task)
+            printf(template + "%n%n", values: _*)
+            print("Subtasks :\n")
+            subtasks.foreach(t => {
+              printf(template + "%n", generateTemplateData(db, t): _*)
+            })
+          }
+      }
+  }
+  // done
+  def addCategory(db: Database, name: String): Unit = {
+    CategoryService.addCategory(db, name)
+    println("Saved Category")
+  }
+  // done
+  def addNewTask(db: Database, title: String): Unit = {
+    val description = askUserForDescription
+    val categoryId = askUserForCategory(db)
+    val deadline = askUserForDeadline
+    val parentId = askUserToAddTaskAsSubtask(db)
+    val task = Task(
       title = title,
-      categoryId = None,
-      description = None,
-      deadline = None,
-      parentTaskId = None
+      description = description,
+      categoryId = categoryId,
+      deadline = deadline match
+      case Some(value) => Some(Timestamp.valueOf(value))
+      case None => None
+      , parentTaskId = parentId,
     )
-    val searchResult = TaskService.searchTasksByTitle(title)
-    println(s"Id: ${searchTask.id}, Title: ${searchTask.title}, Description: ${searchTask.description}, " +
-      s"Category: ${searchTask.categoryId.getOrElse("No Category")}, " +
-      s"Completed: ${searchTask.completed}, Last Updated: ${searchTask.lastUpdated}, " +
-      s"Deadline: ${searchTask.deadline.getOrElse("No deadline defined")}")
+    TaskService.AddTask(db, task)
+    println("Task Added")
+  }
+  // done
+  def addFullTask(db: Database, title: String, description: String, completed: String, deadline: String): Unit = {
+    val categoryId = askUserForCategory(db)
+    val parentId = askUserToAddTaskAsSubtask(db)
+    val task = Task(
+      title = title,
+      description = Option(description),
+      categoryId = categoryId,
+      deadline = Option(Timestamp.valueOf(LocalDateTime.parse(description))),
+      parentTaskId = parentId,
+      completed = if(completed.toInt == 1) true else false
+    )
+    TaskService.AddTask(db, task)
+    println("Task Added")
   }
 
-  def readTask(id: String): Unit = {
-    val db = Database.forConfig("sqlite")
-    val readTask = TaskService.readTask(id)
-    println(s"Title: ${readTask.title}, Description: ${readTask.description}, " +
-      s"Category: ${readTask.categoryId.getOrElse("No Category")}, " +
-      s"Completed: ${readTask.completed}, Last Updated: ${readTask.lastUpdated}, " +
-      s"Deadline: ${readTask.deadline.getOrElse("No deadline defined")}")
+  def updateTaskTitle(db: Database, id: String, value: String): Unit = {
+    val task = TaskService.getTaskById(db, id.toInt)
+    val updated = task.copy(title = value)
+    TaskService.updateTask(db, updated)
+    println("Task Updated")
+  }
+
+  def updateTaskDescription(db: Database, id: String, value: String): Unit = {
+    val task = TaskService.getTaskById(db, id.toInt)
+    val updated = task.copy(description = Option(value))
+    TaskService.updateTask(db, updated)
+    println("Task Updated")
+  }
+
+  def updateTaskCategory(db: Database, id: String, value: String): Unit = {
+    val task = TaskService.getTaskById(db, id.toInt)
+    val updated = task.copy(categoryId = Option(value.toInt))
+    TaskService.updateTask(db, updated)
+    println("Task Updated")
+  }
+
+  def updateTaskDeadline(db: Database, id: String, value: String): Unit = {
+    val task = TaskService.getTaskById(db, id.toInt)
+    val updated = task.copy(deadline = Option(Timestamp.valueOf(LocalDateTime.parse(value))))
+    TaskService.updateTask(db, updated)
+    println("Task Updated")
+  }
+
+  def updateTaskSubtask(db: Database, id: String, value: String): Unit = {
+    val task = TaskService.getTaskById(db, id.toInt)
+    val updated = task.copy(parentTaskId = Option(value.toInt))
+    TaskService.updateTask(db, updated)
+    println("Task Updated")
+  }
+
+  def setTaskComplete(db: Database, id: String): Unit = {
+    val task = TaskService.getTaskById(db, id.toInt)
+    val updated = task.copy(completed = true)
+    TaskService.updateTask(db, updated)
+    println("Task Completed")
+  }
+
+  def setTaskIncomplete(db: Database, id: String): Unit = {
+    val task = TaskService.getTaskById(db, id.toInt)
+    val updated = task.copy(completed = false)
+    TaskService.updateTask(db, updated)
+    println("Task Incomplete")
+  }
+
+  def deleteTask(db: Database, id: String): Unit = {
+    println(id)
+    TaskService.deleteTask(db, id.toInt)
+    println("Task deleted")
+  }
+
+  def deleteCategory(db: Database, id: String): Unit = {
+    CategoryService.deleteTask(db, id.toInt)
+    println("Category deleted")
   }
 }

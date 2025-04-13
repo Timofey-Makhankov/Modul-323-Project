@@ -17,16 +17,16 @@ Ein TUI Programm
 - [X] 1 - Create a Table for categories
 - [X] 1 - Create Mock data for Testing
 - [X] 2 - Be able to list all your tasks
-- [ ] 2 - Be able to count subtasks of a main task   //es ist subtask wenn es ein parent id gibt  -> gehen durch taskliste (wie hashmap vorstellen) key=id  chlindne=value=liste von alle subtasks
+- [X] 2 - Be able to count subtasks of a main task   //es ist subtask wenn es ein parent id gibt  -> gehen durch taskliste (wie hashmap vorstellen) key=id  chlindne=value=liste von alle subtasks
 - [ ] 1 - Allow sorting the Tasks by name (Title)
 - [ ] 1 - Allow sorting the Tasks by date
 - [ ] 2 - Allow filtering the tasks by completion
 - [X] 2 - Allow searching the tasks by title
 - [X] 2 - Save a Task (including any subtasks (title, {description}, completion = false, {categroy}, {deadline}) <-- noch nicht)
-- [ ] 2 - Read a single Task and show subtasks
-- [ ] 2 - Update a Task and its subtasks
-- [ ] 1 - Delete a task
-- [ ] 1 - Delete a subtask/s
+- [X] 2 - Read a single Task and show subtasks
+- [X] 2 - Update a Task and its subtasks
+- [X] 1 - Delete a task
+- [X] 1 - Delete a subtask/s
 - [ ] 1 - Write docs for running the Program
 - [ ] 1 - Write docs for building the Project
 - [ ] 1 - Write docs for using the program
