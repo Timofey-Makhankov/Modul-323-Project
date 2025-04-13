@@ -7,6 +7,7 @@ import scala.io.Source.fromFile
 import scala.util.{Failure, Success, Using}
 import slick.jdbc.SQLiteProfile.api.Database
 
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import scala.io.StdIn.readLine
@@ -106,4 +107,30 @@ def askUserToAddTaskAsSubtask(db: Database): Option[Int] = {
     }
   }
   result
+}
+
+// Implement Recursion
+def sort[A](list: List[A], comparator: (A, A) => Boolean): List[A] = {
+  def merge(a: List[A], b: List[A]): List[A] = {
+    if (a.isEmpty) b
+    else if (b.isEmpty) a
+    else if (comparator(b.head, a.head)) b.head :: merge(b.tail, a)
+    else a.head :: merge(b, a.tail)
+  }
+  val n = list.length / 2
+  if (n == 0) list
+  else merge(sort(list take n, comparator), sort(list drop n, comparator))
+}
+
+// Higher-Order Functions at play
+def generateComparatorMethodByTitle(order: String): (Task, Task) => Boolean = {
+  order match
+    case "asc" => (a: Task, b: Task ) => a.title.compareToIgnoreCase(b.title) > 0
+    case _ => (a: Task, b: Task ) => b.title.compareToIgnoreCase(a.title) > 0
+}
+
+def generateComparatorMethodByDeadline(order: String): (Task, Task) => Boolean = {
+  order match
+    case "asc" => (a: Task, b: Task ) => a.deadline.isDefined || a.deadline.getOrElse(Timestamp(0)).compareTo(b.deadline.getOrElse(Timestamp(0))) > 0
+    case _ => (a: Task, b: Task ) => a.deadline.isEmpty || b.deadline.getOrElse(Timestamp(0)).compareTo(a.deadline.getOrElse(Timestamp(0))) > 0
 }

@@ -10,8 +10,10 @@ def startTextUserInterface(db: Database): Unit = {
     input match {
       case "h" | "help" => Command.printHelpMessage()
       case "list" => Command.listTasks(db)
-      //case s"list sort $key $order" => Command.listTasks(db, key, order)
+      case s"list sort $key $order" => Command.listOrderedTasks(db, key, order)
       case "list categories" => Command.listCategories(db)
+      case "list completed" => Command.listCompleted(db)
+      case s"list $term" => Command.listByTitle(db, term)
       case s"show $id" => Command.showTaskDetails(db, id)
       case s"add category $name" => Command.addCategory(db, name)
       case s"add $title" => Command.addNewTask(db, title)

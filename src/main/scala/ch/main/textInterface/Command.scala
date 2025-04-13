@@ -7,19 +7,13 @@ import slick.jdbc.SQLiteProfile.api.*
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-object Command
-{
+object Command {
   // Complete
   def printHelpMessage(): Unit = {
     val message = readFile("src/main/resources/help_message.txt")
     message match
       case Some(value) => println(value)
       case None => sendErrorMessage("unable to display message, please read written doc")
-  }
-
-  // Complete
-  def sendErrorMessage(message: String): Unit = {
-    println(message)
   }
 
   //complete
@@ -38,11 +32,13 @@ object Command
         })
       }
   }
+
   // done
   def listCategories(db: Database): Unit = {
     val categories = CategoryService.getAllCategories(db)
     for (c <- categories) yield printf("%d: %s%n", c.id.get, c.name)
   }
+
   // done
   def showTaskDetails(db: Database, id: String): Unit = {
     id.toIntOption match
@@ -51,7 +47,7 @@ object Command
         val content = readFile("src/main/resources/task_display.txt")
         content match
           case None => sendErrorMessage("unable to get task template, please report the issue to us")
-          case Some(template) =>{
+          case Some(template) => {
             val task = TaskService.getTaskById(db, id)
             val subtasks = TaskService.getAllSubtasksByParentId(db).filter(_.parentTaskId.get == task.id.get)
             val values: Seq[String] = generateTemplateData(db, task)
@@ -63,11 +59,18 @@ object Command
           }
       }
   }
+
+  // Complete
+  def sendErrorMessage(message: String): Unit = {
+    println(message)
+  }
+
   // done
   def addCategory(db: Database, name: String): Unit = {
     CategoryService.addCategory(db, name)
     println("Saved Category")
   }
+
   // done
   def addNewTask(db: Database, title: String): Unit = {
     val description = askUserForDescription
@@ -79,13 +82,14 @@ object Command
       description = description,
       categoryId = categoryId,
       deadline = deadline match
-      case Some(value) => Some(Timestamp.valueOf(value))
-      case None => None
+        case Some(value) => Some(Timestamp.valueOf(value))
+        case None => None
       , parentTaskId = parentId,
     )
     TaskService.AddTask(db, task)
     println("Task Added")
   }
+
   // done
   def addFullTask(db: Database, title: String, description: String, completed: String, deadline: String): Unit = {
     val categoryId = askUserForCategory(db)
@@ -96,7 +100,7 @@ object Command
       categoryId = categoryId,
       deadline = Option(Timestamp.valueOf(LocalDateTime.parse(description))),
       parentTaskId = parentId,
-      completed = if(completed.toInt == 1) true else false
+      completed = if (completed.toInt == 1) true else false
     )
     TaskService.AddTask(db, task)
     println("Task Added")
@@ -160,5 +164,68 @@ object Command
   def deleteCategory(db: Database, id: String): Unit = {
     CategoryService.deleteTask(db, id.toInt)
     println("Category deleted")
+  }
+
+  def listByTitle(db: Database, term: String): Unit = {
+    val content = readFile("src/main/resources/task_display.txt")
+    content match
+      case None => sendErrorMessage("unable to get task template, please report the issue to us")
+      case Some(template) => {
+        val tasks = TaskService.getAllTasks(db)
+        tasks.filter(_.title == term).foreach(task => {
+          val values: Seq[String] = generateTemplateData(db, task)
+          printf(
+            template + "%nSubtasks: %s" + "%n",
+            values.appended(TaskService.getAllSubtasksByParentId(db).count(_.parentTaskId.get == task.id.get).toString): _*)
+          print("\n")
+        })
+      }
+  }
+
+  def listCompleted(db: Database): Unit = {
+    val content = readFile("src/main/resources/task_display.txt")
+    content match
+      case None => sendErrorMessage("unable to get task template, please report the issue to us")
+      case Some(template) => {
+        val tasks = TaskService.getAllTasks(db)
+        tasks.filter(_.completed).foreach(task => {
+          val values: Seq[String] = generateTemplateData(db, task)
+          printf(
+            template + "%nSubtasks: %s" + "%n",
+            values.appended(TaskService.getAllSubtasksByParentId(db).count(_.parentTaskId.get == task.id.get).toString): _*)
+          print("\n")
+        })
+      }
+  }
+
+  def listOrderedTasks(db: Database, key: String, order: String): Unit = {
+    val content = readFile("src/main/resources/task_display.txt")
+    content match
+      case None => sendErrorMessage("unable to get task template, please report the issue to us")
+      case Some(template) => {
+        val tasks = TaskService.getAllTasks(db)
+        key.toLowerCase().strip() match
+          case "title" => {
+            val sorted = sort[Task](List.from(tasks), generateComparatorMethodByTitle(order))
+            sorted.foreach(task => {
+              val values: Seq[String] = generateTemplateData(db, task)
+              printf(
+                template + "%nSubtasks: %s" + "%n",
+                values.appended(TaskService.getAllSubtasksByParentId(db).count(_.parentTaskId.get == task.id.get).toString): _*)
+              print("\n")
+            })
+          }
+          case "deadline" => {
+            val sorted = sort[Task](List.from(tasks), generateComparatorMethodByDeadline(order))
+            sorted.foreach(task => {
+              val values: Seq[String] = generateTemplateData(db, task)
+              printf(
+                template + "%nSubtasks: %s" + "%n",
+                values.appended(TaskService.getAllSubtasksByParentId(db).count(_.parentTaskId.get == task.id.get).toString): _*)
+              print("\n")
+            })
+          }
+          case _ => sendErrorMessage("provided key is not available ATM")
+      }
   }
 }
