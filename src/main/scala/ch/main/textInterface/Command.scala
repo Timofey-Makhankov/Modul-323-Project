@@ -136,6 +136,7 @@ object Command {
 
   def updateTaskSubtask(db: Database, id: String, value: String): Unit = {
     val task = TaskService.getTaskById(db, id.toInt)
+    // (2)
     val updated = task.copy(parentTaskId = Option(value.toInt))
     TaskService.updateTask(db, updated)
     println("Task Updated")
@@ -188,6 +189,7 @@ object Command {
       case None => sendErrorMessage("unable to get task template, please report the issue to us")
       case Some(template) => {
         val tasks = TaskService.getAllTasks(db)
+        // (6)
         tasks.filter(_.completed).foreach(task => {
           val values: Seq[String] = generateTemplateData(db, task)
           printf(
@@ -204,8 +206,10 @@ object Command {
       case None => sendErrorMessage("unable to get task template, please report the issue to us")
       case Some(template) => {
         val tasks = TaskService.getAllTasks(db)
+        // (6)
         key.toLowerCase().strip() match
           case "title" => {
+            // (2)
             val sorted = sort[Task](List.from(tasks), generateComparatorMethodByTitle(order))
             sorted.foreach(task => {
               val values: Seq[String] = generateTemplateData(db, task)

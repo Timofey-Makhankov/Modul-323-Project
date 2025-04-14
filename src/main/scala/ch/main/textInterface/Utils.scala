@@ -109,7 +109,7 @@ def askUserToAddTaskAsSubtask(db: Database): Option[Int] = {
   result
 }
 
-// Implement Recursion
+// (3) Implement Recursion
 def sort[A](list: List[A], comparator: (A, A) => Boolean): List[A] = {
   def merge(a: List[A], b: List[A]): List[A] = {
     if (a.isEmpty) b
@@ -122,7 +122,7 @@ def sort[A](list: List[A], comparator: (A, A) => Boolean): List[A] = {
   else merge(sort(list take n, comparator), sort(list drop n, comparator))
 }
 
-// Higher-Order Functions at play
+// (5) Higher-Order Functions at play
 def generateComparatorMethodByTitle(order: String): (Task, Task) => Boolean = {
   order match
     case "asc" => (a: Task, b: Task ) => a.title.compareToIgnoreCase(b.title) > 0

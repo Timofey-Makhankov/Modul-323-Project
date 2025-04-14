@@ -6,6 +6,7 @@ import slick.jdbc.SQLiteProfile.api.*
 import slick.lifted.TableQuery.Extract
 import slick.sql.{FixedSqlAction, FixedSqlStreamingAction, SqlAction}
 
+// (1) Pure Functions in use
 object TaskAction {
   def getAll = {
     tasksSchema.result

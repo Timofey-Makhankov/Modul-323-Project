@@ -1,7 +1,6 @@
 package ch.main.db.model.task
 
 import slick.jdbc.SQLiteProfile.api.Database
-import slick.lifted.TableQuery.Extract
 
 import scala.concurrent.Await
 import scala.concurrent.duration.*

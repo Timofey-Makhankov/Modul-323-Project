@@ -27,9 +27,9 @@ Ein TUI Programm
 - [X] 2 - Update a Task and its subtasks
 - [X] 1 - Delete a task
 - [X] 1 - Delete a subtask/s
-- [ ] 1 - Write docs for running the Program
-- [ ] 1 - Write docs for building the Project
-- [ ] 1 - Write docs for using the program
+- [X] 1 - Write docs for running the Program
+- [X] 1 - Write docs for building the Project
+- [X] 1 - Write docs for using the program
 
 ### Extra (Wenn möglich)
 
